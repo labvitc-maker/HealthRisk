@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - HealthRisk Monitor{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center py-4">
+        <div class="col-md-10 col-lg-8">
+            <!-- Profile Header -->
+            <div class="text-center mb-4" data-aos="fade-down">
+                <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center float" style="width: 120px; height: 120px; background: var(--gradient-purple);">
+                    <i class="fas fa-user-circle fa-4x" style="color: var(--pastel-purple-dark);"></i>
+                </div>
+                <h2 class="fw-bold" style="color: var(--text-primary);">{{ profile.name }}</h2>
+                <span class="risk-badge {% if profile.is_elderly %}moderate{% else %}low{% endif %} mt-2">
+                    <i class="fas {% if profile.is_elderly %}fa-user-shield{% else %}fa-user{% endif %} me-2"></i>
+                    {% if profile.is_elderly %}Elderly (60+){% else %}Adult{% endif %}
+                </span>
+            </div>
+
+            <!-- Profile Stats Row -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card border-0 shadow-sm text-center p-3">
+                        <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: var(--pastel-green-light);">
+                            <i class="fas fa-calendar-check" style="color: var(--pastel-green-dark);"></i>
+                        </div>
+                        <h6 class="mb-0">Member Since</h6>
+                        <small class="text-muted">{{ current_user.created_at.strftime('%b %Y') }}</small>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card border-0 shadow-sm text-center p-3">
+                        <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: var(--pastel-pink-light);">
+                            <i class="fas fa-heartbeat" style="color: var(--pastel-pink-dark);"></i>
+                        </div>
+                        <h6 class="mb-0">Health Conditions</h6>
+                        <small class="text-muted">{{ profile.get_medical_conditions_list()|length }} Active</small>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card border-0 shadow-sm text-center p-3">
+                        <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: var(--pastel-blue-light);">
+                            <i class="fas fa-bell" style="color: var(--pastel-blue-dark);"></i>
+                        </div>
+                        <h6 class="mb-0">Notifications</h6>
+                        <small class="text-muted">{{ current_user.notifications.count() }} Total</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="row g-4">
+                <!-- Demographic Card -->
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="card border-0 shadow h-100">
+                        <div class="card-header bg-transparent border-0 pt-4 pb-0">
+                            <h5 class="mb-0" style="color: var(--pastel-purple-dark);">
+                                <i class="fas fa-address-card me-2"></i>
+                                Personal Information
+                            </h5>
+                        </div>
+                        <div class="card-body pt-3">
+                            <div class="vstack gap-3">
+                                <!-- Name -->
+                                <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-purple-light);">
+                                    <div class="rounded-circle p-2 me-3" style="background: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-user" style="color: var(--pastel-purple-dark);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Full Name</small>
+                                        <span class="fw-bold">{{ profile.name }}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Age -->
+                                <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-green-light);">
+                                    <div class="rounded-circle p-2 me-3" style="background: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-calendar" style="color: var(--pastel-green-dark);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Age</small>
+                                        <span class="fw-bold">{{ profile.age }} years</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Gender -->
+                                <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-pink-light);">
+                                    <div class="rounded-circle p-2 me-3" style="background: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-venus-mars" style="color: var(--pastel-pink-dark);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Gender</small>
+                                        <span class="fw-bold">{{ profile.gender }}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Occupation -->
+                                <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-yellow-light);">
+                                    <div class="rounded-circle p-2 me-3" style="background: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-briefcase" style="color: var(--pastel-yellow-dark);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Occupation</small>
+                                        <span class="fw-bold">{{ profile.occupation }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Medical Card -->
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="card border-0 shadow h-100">
+                        <div class="card-header bg-transparent border-0 pt-4 pb-0">
+                            <h5 class="mb-0" style="color: var(--pastel-pink-dark);">
+                                <i class="fas fa-heartbeat me-2"></i>
+                                Medical Conditions
+                            </h5>
+                        </div>
+                        <div class="card-body pt-3">
+                            <div class="vstack gap-2">
+                                <!-- Asthma -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3" 
+                                     style="background: {% if profile.asthma %}var(--pastel-green-light){% else %}#f8f9fa{% endif %};">
+                                    <div>
+                                        <i class="fas fa-lungs me-2" style="color: {% if profile.asthma %}var(--pastel-green-dark){% else %}var(--text-light){% endif %};"></i>
+                                        <span style="color: {% if profile.asthma %}var(--text-primary){% else %}var(--text-light){% endif %};">Asthma</span>
+                                    </div>
+                                    {% if profile.asthma %}
+                                        <span class="risk-badge low">Active</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #e0e0e0; color: var(--text-light);">None</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Heart Risk -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3" 
+                                     style="background: {% if profile.heart_risk %}var(--pastel-pink-light){% else %}#f8f9fa{% endif %};">
+                                    <div>
+                                        <i class="fas fa-heart me-2" style="color: {% if profile.heart_risk %}var(--pastel-pink-dark){% else %}var(--text-light){% endif %};"></i>
+                                        <span style="color: {% if profile.heart_risk %}var(--text-primary){% else %}var(--text-light){% endif %};">Heart Condition</span>
+                                    </div>
+                                    {% if profile.heart_risk %}
+                                        <span class="risk-badge moderate">Active</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #e0e0e0; color: var(--text-light);">None</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Respiratory Distress -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3" 
+                                     style="background: {% if profile.respiratory_distress %}var(--pastel-purple-light){% else %}#f8f9fa{% endif %};">
+                                    <div>
+                                        <i class="fas fa-lungs me-2" style="color: {% if profile.respiratory_distress %}var(--pastel-purple-dark){% else %}var(--text-light){% endif %};"></i>
+                                        <span style="color: {% if profile.respiratory_distress %}var(--text-primary){% else %}var(--text-light){% endif %};">Respiratory Distress</span>
+                                    </div>
+                                    {% if profile.respiratory_distress %}
+                                        <span class="risk-badge moderate">Active</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #e0e0e0; color: var(--text-light);">None</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Allergies -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3" 
+                                     style="background: {% if profile.allergies %}var(--pastel-yellow-light){% else %}#f8f9fa{% endif %};">
+                                    <div>
+                                        <i class="fas fa-allergies me-2" style="color: {% if profile.allergies %}var(--pastel-yellow-dark){% else %}var(--text-light){% endif %};"></i>
+                                        <span style="color: {% if profile.allergies %}var(--text-primary){% else %}var(--text-light){% endif %};">Allergies</span>
+                                    </div>
+                                    {% if profile.allergies %}
+                                        <span class="risk-badge low">Active</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #e0e0e0; color: var(--text-light);">None</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Heat Sensitivity -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3" 
+                                     style="background: {% if profile.heat_sensitivity %}var(--pastel-orange-light){% else %}#f8f9fa{% endif %};">
+                                    <div>
+                                        <i class="fas fa-temperature-high me-2" style="color: {% if profile.heat_sensitivity %}var(--pastel-orange-dark){% else %}var(--text-light){% endif %};"></i>
+                                        <span style="color: {% if profile.heat_sensitivity %}var(--text-primary){% else %}var(--text-light){% endif %};">Heat Sensitivity</span>
+                                    </div>
+                                    {% if profile.heat_sensitivity %}
+                                        <span class="risk-badge moderate">Active</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #e0e0e0; color: var(--text-light);">None</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Diabetes -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3" 
+                                     style="background: {% if profile.diabetes %}var(--pastel-blue-light){% else %}#f8f9fa{% endif %};">
+                                    <div>
+                                        <i class="fas fa-tint me-2" style="color: {% if profile.diabetes %}var(--pastel-blue-dark){% else %}var(--text-light){% endif %};"></i>
+                                        <span style="color: {% if profile.diabetes %}var(--text-primary){% else %}var(--text-light){% endif %};">Diabetes</span>
+                                    </div>
+                                    {% if profile.diabetes %}
+                                        <span class="risk-badge moderate">Active</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #e0e0e0; color: var(--text-light);">None</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Info Card -->
+                <div class="col-12" data-aos="fade-up">
+                    <div class="card border-0 shadow">
+                        <div class="card-body p-4">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-blue-light);">
+                                        <div class="rounded-circle p-3 me-3" style="background: white;">
+                                            <i class="fas fa-envelope" style="color: var(--pastel-blue-dark);"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Email Address</small>
+                                            <span class="fw-bold">{{ current_user.email }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-purple-light);">
+                                        <div class="rounded-circle p-3 me-3" style="background: white;">
+                                            <i class="fas fa-calendar-check" style="color: var(--pastel-purple-dark);"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Account Created</small>
+                                            <span class="fw-bold">{{ current_user.created_at.strftime('%B %d, %Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-green-light);">
+                                        <div class="rounded-circle p-3 me-3" style="background: white;">
+                                            <i class="fas fa-clock" style="color: var(--pastel-green-dark);"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Last Updated</small>
+                                            <span class="fw-bold">{{ profile.updated_at.strftime('%B %d, %Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--pastel-pink-light);">
+                                        <div class="rounded-circle p-3 me-3" style="background: white;">
+                                            <i class="fas fa-shield-alt" style="color: var(--pastel-pink-dark);"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Profile Status</small>
+                                            <span class="fw-bold text-success">Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="col-12" data-aos="fade-up" data-aos-delay="200">
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary btn-lg px-5">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a href="{{ url_for('profile.setup') }}" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-edit me-2"></i>Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .vstack {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .risk-badge {
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .risk-badge.low {
+        background: var(--status-success-bg);
+        color: var(--status-success-text);
+    }
+    .risk-badge.moderate {
+        background: var(--status-warning-bg);
+        color: var(--status-warning-text);
+    }
+    .risk-badge.high {
+        background: var(--status-danger-bg);
+        color: var(--status-danger-text);
+    }
+</style>
+{% endblock %}

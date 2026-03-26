@@ -1,0 +1,207 @@
+/* Custom styles for HealthRisk Monitor */
+
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Risk Banner Styles */
+.risk-banner {
+    border: none;
+    border-radius: 10px;
+    color: white;
+}
+
+.risk-banner.risk-high {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.risk-banner.risk-moderate {
+    background: linear-gradient(135deg, #fd7e14, #e96b02);
+}
+
+.risk-banner.risk-low {
+    background: linear-gradient(135deg, #28a745, #218838);
+}
+
+.risk-level {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Risk Indicators */
+.risk-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.risk-indicator.risk-high {
+    background-color: #dc3545;
+    box-shadow: 0 0 5px #dc3545;
+}
+
+.risk-indicator.risk-moderate {
+    background-color: #fd7e14;
+    box-shadow: 0 0 5px #fd7e14;
+}
+
+.risk-indicator.risk-low {
+    background-color: #28a745;
+    box-shadow: 0 0 5px #28a745;
+}
+
+/* Risk Text Colors */
+.risk-high {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.risk-moderate {
+    color: #fd7e14;
+    font-weight: bold;
+}
+
+.risk-low {
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Sensor Cards */
+.card .display-4 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Notification Badge */
+.notification-badge {
+    position: relative;
+    top: -8px;
+    right: 5px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .card .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .risk-level {
+        display: block;
+        margin-top: 10px;
+    }
+}
+
+/* Form Styles */
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Chart Containers */
+canvas {
+    max-height: 300px;
+    width: 100% !important;
+}
+
+/* Profile Page */
+.profile-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px 10px 0 0;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Health-themed colors */
+.bg-health-primary {
+    background: linear-gradient(135deg, #4299e1, #3182ce);
+}
+
+.bg-health-success {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+}
+
+.bg-health-warning {
+    background: linear-gradient(135deg, #ecc94b, #d69e2e);
+}
+
+.bg-health-danger {
+    background: linear-gradient(135deg, #f56565, #e53e3e);
+}
+
+/* Print Styles */
+@media print {
+    .navbar, footer, .btn {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

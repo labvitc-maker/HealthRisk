@@ -1,0 +1,751 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - HealthRisk Monitor{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Overall Health Risk Banner -->
+    <div class="row mb-4 fade-in">
+        <div class="col-12">
+            <div class="card overflow-hidden border-0" style="background: linear-gradient(135deg, 
+                {% if risk_result.overall_risk == 'High' %}#FFE0E0, #FFC9C9
+                {% elif risk_result.overall_risk == 'Moderate' %}#FFF2D9, #FFEACB
+                {% else %}#D8F0E5, #C5E5D5{% endif %});">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small text-uppercase mb-2 d-block" style="color: 
+                                {% if risk_result.overall_risk == 'High' %}#C44C4C
+                                {% elif risk_result.overall_risk == 'Moderate' %}#B76E2E
+                                {% else %}#3D8B7A{% endif %} !important;">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Current Overall Risk
+                            </span>
+                            <h2 class="display-5 fw-bold mb-0" style="color: 
+                                {% if risk_result.overall_risk == 'High' %}#C44C4C
+                                {% elif risk_result.overall_risk == 'Moderate' %}#B76E2E
+                                {% else %}#3D8B7A{% endif %};">
+                                {{ risk_result.overall_risk }}
+                            </h2>
+                            <div class="mt-2">
+                                <span class="badge" style="background: white; color: 
+                                    {% if risk_result.overall_risk == 'High' %}#C44C4C
+                                    {% elif risk_result.overall_risk == 'Moderate' %}#B76E2E
+                                    {% else %}#3D8B7A{% endif %}; padding: 6px 12px;">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    Score: {{ risk_result.overall_score }}/100
+                                </span>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <i class="fas fa-shield-alt fa-4x" style="color: {% if risk_result.overall_risk == 'High' %}#FFB0B0
+                                {% elif risk_result.overall_risk == 'Moderate' %}#FFE5B4
+                                {% else %}#A8D5BA{% endif %}; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Environmental Data - Colorful Cards -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="mb-3" style="color: #6B4F8B;">
+                <i class="fas fa-microchip me-2" style="color: #8B5CF6;"></i>
+                Live Environmental Data
+            </h5>
+        </div>
+        
+        <!-- Temperature Card - Red Theme -->
+        <div class="col-xl-2 col-lg-4 col-md-6 mb-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #FFE0E0, #FFC9C9);">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle me-3" style="background: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-thermometer-half" style="color: #C44C4C; font-size: 1.3rem;"></i>
+                        </div>
+                        <div>
+                            <span class="small d-block" style="color: #C44C4C;">Temperature</span>
+                            <span class="fw-bold fs-5" id="temp-value" style="color: #C44C4C;">{{ sensor_data.temperature }}°C</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Humidity Card - Blue Theme -->
+        <div class="col-xl-2 col-lg-4 col-md-6 mb-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #E0F0FF, #C9E3FF);">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle me-3" style="background: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-tint" style="color: #4A7DB5; font-size: 1.3rem;"></i>
+                        </div>
+                        <div>
+                            <span class="small d-block" style="color: #4A7DB5;">Humidity</span>
+                            <span class="fw-bold fs-5" id="humidity-value" style="color: #4A7DB5;">{{ sensor_data.humidity }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Air Quality Card - Green Theme -->
+        <div class="col-xl-2 col-lg-4 col-md-6 mb-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #D8F0E5, #C5E5D5);">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle me-3" style="background: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-wind" style="color: #3D8B7A; font-size: 1.3rem;"></i>
+                        </div>
+                        <div>
+                            <span class="small d-block" style="color: #3D8B7A;">Air Quality</span>
+                            <span class="fw-bold fs-5" id="air-value" style="color: #3D8B7A;">{{ sensor_data.air_quality }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Noise Level Card - Orange/Yellow Theme -->
+        <div class="col-xl-2 col-lg-4 col-md-6 mb-3" data-aos="fade-up" data-aos-delay="400">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #FFF2D9, #FFEACB);">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle me-3" style="background: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-volume-up" style="color: #B76E2E; font-size: 1.3rem;"></i>
+                        </div>
+                        <div>
+                            <span class="small d-block" style="color: #B76E2E;">Noise Level</span>
+                            <span class="fw-bold fs-5" id="noise-value" style="color: #B76E2E;">{{ sensor_data.noise }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Crowd Card - Purple Theme -->
+        <div class="col-xl-2 col-lg-4 col-md-6 mb-3" data-aos="fade-up" data-aos-delay="500">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #F0E8FF, #E5D9F2);">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle me-3" style="background: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-users" style="color: #8B5CF6; font-size: 1.3rem;"></i>
+                        </div>
+                        <div>
+                            <span class="small d-block" style="color: #8B5CF6;">Crowd</span>
+                            <span class="fw-bold fs-5" id="crowd-value" style="color: #8B5CF6;">{% if sensor_data.crowd %}Present{% else %}None{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Distance Card - Pink Theme -->
+        <div class="col-xl-2 col-lg-4 col-md-6 mb-3" data-aos="fade-up" data-aos-delay="600">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #FFE0EB, #FFD1DC);">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle me-3" style="background: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-arrows-alt-h" style="color: #D45D7A; font-size: 1.3rem;"></i>
+                        </div>
+                        <div>
+                            <span class="small d-block" style="color: #D45D7A;">Distance</span>
+                            <span class="fw-bold fs-5" id="distance-value" style="color: #D45D7A;">{{ sensor_data.distance }} cm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Analysis Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="mb-3" style="color: #6B4F8B;">
+                <i class="fas fa-chart-pie me-2" style="color: #8B5CF6;"></i>
+                Personalized Risk Analysis
+            </h5>
+        </div>
+        
+        <!-- Environmental Risks -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow h-100">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4">
+                    <h6 class="mb-0" style="color: #3D8B7A;">
+                        <i class="fas fa-leaf me-2" style="color: #6BAA8A;"></i>
+                        Environmental Risks
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <!-- Heat Risk - Red Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #FFF0F0;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-fire me-2" style="color: #C44C4C;"></i>
+                                        Heat Risk
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.heat_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.heat_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="heat-risk">{{ risk_result.risk_factors.heat_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.heat_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.heat_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Air Quality Risk - Blue Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #F0F8FF;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-wind me-2" style="color: #4A7DB5;"></i>
+                                        Air Quality
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.air_quality_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.air_quality_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="air-risk">{{ risk_result.risk_factors.air_quality_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.air_quality_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.air_quality_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dehydration Risk - Green Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #F0F9F2;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-tint me-2" style="color: #3D8B7A;"></i>
+                                        Dehydration
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.dehydration_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.dehydration_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="dehydration-risk">{{ risk_result.risk_factors.dehydration_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.dehydration_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.dehydration_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Stress Risk - Yellow Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #FFF9ED;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-brain me-2" style="color: #B76E2E;"></i>
+                                        Stress
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.stress_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.stress_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="stress-risk">{{ risk_result.risk_factors.stress_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.stress_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.stress_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Respiratory Distress - Purple Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #F8F0FF;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-lungs me-2" style="color: #8B5CF6;"></i>
+                                        Respiratory
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.respiratory_distress.level|lower }}">
+                                        {{ risk_result.risk_factors.respiratory_distress.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="respiratory-risk">{{ risk_result.risk_factors.respiratory_distress.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.respiratory_distress.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.respiratory_distress.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Infection Risk - Red/Orange Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #FFF2EA;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-virus me-2" style="color: #C44C4C;"></i>
+                                        Infection
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.infection_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.infection_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="infection-risk">{{ risk_result.risk_factors.infection_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.infection_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.infection_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Fainting Risk - Pink Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #FFF0F5;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-dizzy me-2" style="color: #D45D7A;"></i>
+                                        Fainting
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.fainting_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.fainting_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="fainting-risk">{{ risk_result.risk_factors.fainting_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.fainting_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.fainting_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Health-Specific Risks -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow h-100">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4">
+                    <h6 class="mb-0" style="color: #D45D7A;">
+                        <i class="fas fa-heartbeat me-2" style="color: #E68A8A;"></i>
+                        Health-Specific Risks
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <!-- Asthma Risk - Blue/Green Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #F0F8FF;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-lungs me-2" style="color: #4A7DB5;"></i>
+                                        Asthma Risk
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.asthma_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.asthma_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="asthma-risk">{{ risk_result.risk_factors.asthma_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.asthma_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.asthma_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Heart Risk - Pink/Red Theme -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3" style="background: #FFF0F0;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-medium">
+                                        <i class="fas fa-heart me-2" style="color: #C44C4C;"></i>
+                                        Heart Risk
+                                    </span>
+                                    <span class="risk-badge {{ risk_result.risk_factors.heart_risk.level|lower }}">
+                                        {{ risk_result.risk_factors.heart_risk.level }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <span class="text-muted small">Risk Score</span>
+                                    <span class="fw-bold" id="heart-risk">{{ risk_result.risk_factors.heart_risk.score }}/100</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {{ risk_result.risk_factors.heart_risk.level|lower }}" 
+                                         style="width: {{ risk_result.risk_factors.heart_risk.score }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if not risk_result.risk_factors.asthma_risk.active and not risk_result.risk_factors.heart_risk.active %}
+                        <div class="col-12">
+                            <div class="text-center py-5" style="background: var(--pastel-lavender-light); border-radius: var(--radius-lg);">
+                                <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: white;">
+                                    <i class="fas fa-check-circle fa-2x" style="color: #8B5CF6;"></i>
+                                </div>
+                                <h6 style="color: #6B4F8B;">No Health-Specific Conditions</h6>
+                                <p class="text-muted small mb-0">Update your profile to see personalized risks.</p>
+                                <a href="{{ url_for('profile.setup') }}" class="btn btn-primary btn-sm mt-3">
+                                    <i class="fas fa-edit me-2"></i>Update Profile
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historical Data Charts -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="mb-3" style="color: #6B4F8B;">
+                <i class="fas fa-chart-line me-2" style="color: #8B5CF6;"></i>
+                Environmental Trends
+            </h5>
+        </div>
+        
+        <!-- Temperature Chart -->
+        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card border-0 shadow h-100">
+                <div class="card-header bg-transparent border-0 pt-3 pb-0 px-3">
+                    <h6 class="mb-0 small" style="color: #C44C4C;">
+                        <i class="fas fa-circle me-2" style="color: #FFB6C1;"></i>
+                        Temperature History
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <canvas id="tempChart" style="height: 150px;"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Humidity Chart -->
+        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="card border-0 shadow h-100">
+                <div class="card-header bg-transparent border-0 pt-3 pb-0 px-3">
+                    <h6 class="mb-0 small" style="color: #4A7DB5;">
+                        <i class="fas fa-circle me-2" style="color: #B0E0E6;"></i>
+                        Humidity History
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <canvas id="humidityChart" style="height: 150px;"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Air Quality Chart -->
+        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card border-0 shadow h-100">
+                <div class="card-header bg-transparent border-0 pt-3 pb-0 px-3">
+                    <h6 class="mb-0 small" style="color: #3D8B7A;">
+                        <i class="fas fa-circle me-2" style="color: #B8E0D0;"></i>
+                        Air Quality History
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <canvas id="airQualityChart" style="height: 150px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Risk Badge Styles */
+    .risk-badge {
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        display: inline-block;
+    }
+    
+    .risk-badge.low {
+        background: #D8F0E5;
+        color: #1F7A5C;
+        border: 1px solid #A8D5BA;
+    }
+    
+    .risk-badge.moderate {
+        background: #FFF2D9;
+        color: #B76E2E;
+        border: 1px solid #FFE5B4;
+    }
+    
+    .risk-badge.high {
+        background: #FFE0E0;
+        color: #C62828;
+        border: 1px solid #FFB0B0;
+    }
+    
+    /* Progress Bar Styles */
+    .progress {
+        background-color: #f0f0f0;
+        border-radius: 50px;
+        height: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        border-radius: 50px;
+        transition: width 0.6s ease;
+    }
+    
+    .progress-bar.low {
+        background: linear-gradient(90deg, #A8D5BA, #D8F0E5);
+    }
+    
+    .progress-bar.moderate {
+        background: linear-gradient(90deg, #FFE5B4, #FFF2D9);
+    }
+    
+    .progress-bar.high {
+        background: linear-gradient(90deg, #FFB0B0, #FFE0E0);
+    }
+    
+    /* Card Hover Effects */
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 16px;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Animation */
+    .fade-in {
+        animation: fadeIn 0.8s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// Chart data
+const chartData = {{ chart_data|safe }};
+
+// Initialize Temperature Chart
+new Chart(document.getElementById('tempChart'), {
+    type: 'line',
+    data: {
+        labels: chartData.timestamps,
+        datasets: [{
+            data: chartData.temperatures,
+            borderColor: '#C44C4C',
+            backgroundColor: 'rgba(196, 76, 76, 0.1)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#C44C4C',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { 
+            x: { display: true, grid: { display: false }, ticks: { font: { size: 9 } } },
+            y: { display: true, ticks: { font: { size: 9 } } }
+        }
+    }
+});
+
+// Initialize Humidity Chart
+new Chart(document.getElementById('humidityChart'), {
+    type: 'line',
+    data: {
+        labels: chartData.timestamps,
+        datasets: [{
+            data: chartData.humidities,
+            borderColor: '#4A7DB5',
+            backgroundColor: 'rgba(74, 125, 181, 0.1)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#4A7DB5',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { 
+            x: { display: true, grid: { display: false }, ticks: { font: { size: 9 } } },
+            y: { display: true, ticks: { font: { size: 9 } } }
+        }
+    }
+});
+
+// Initialize Air Quality Chart
+new Chart(document.getElementById('airQualityChart'), {
+    type: 'line',
+    data: {
+        labels: chartData.timestamps,
+        datasets: [{
+            data: chartData.air_quality,
+            borderColor: '#3D8B7A',
+            backgroundColor: 'rgba(61, 139, 122, 0.1)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#3D8B7A',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { 
+            x: { display: true, grid: { display: false }, ticks: { font: { size: 9 } } },
+            y: { display: true, ticks: { font: { size: 9 } } }
+        }
+    }
+});
+
+// Track shown notifications
+const shownNotifications = new Set();
+
+// Show real-time notification
+function showNotification(notification) {
+    if (shownNotifications.has(notification.id)) return;
+    shownNotifications.add(notification.id);
+    
+    const container = document.querySelector('.toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast show mb-2 ${notification.risk_level.toLowerCase()}`;
+    
+    let icon = 'fa-exclamation-triangle';
+    if (notification.risk_type.includes('heat')) icon = 'fa-fire';
+    else if (notification.risk_type.includes('asthma')) icon = 'fa-lungs';
+    else if (notification.risk_type.includes('heart')) icon = 'fa-heart';
+    else if (notification.risk_type.includes('air')) icon = 'fa-wind';
+    else if (notification.risk_type.includes('dehydration')) icon = 'fa-tint';
+    else if (notification.risk_type.includes('stress')) icon = 'fa-brain';
+    else if (notification.risk_type.includes('infection')) icon = 'fa-virus';
+    else if (notification.risk_type.includes('fainting')) icon = 'fa-dizzy';
+    
+    let iconColor = notification.risk_level === 'High' ? '#C44C4C' : 
+                    notification.risk_level === 'Moderate' ? '#B76E2E' : '#3D8B7A';
+    
+    toast.innerHTML = `
+        <div class="toast-header">
+            <i class="fas ${icon} me-2" style="color: ${iconColor};"></i>
+            <strong class="me-auto">${notification.risk_type.replace(/_/g, ' ').toUpperCase()}</strong>
+            <small>just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            ${notification.message}
+        </div>
+    `;
+    
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
+
+// Update dashboard data
+function updateDashboard() {
+    fetch('/dashboard/api/latest-data')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) return;
+            
+            // Update environmental values
+            document.getElementById('temp-value').textContent = data.sensor_data.temperature + '°C';
+            document.getElementById('humidity-value').textContent = data.sensor_data.humidity + '%';
+            document.getElementById('air-value').textContent = data.sensor_data.air_quality;
+            document.getElementById('noise-value').textContent = data.sensor_data.noise;
+            document.getElementById('crowd-value').textContent = data.sensor_data.crowd ? 'Present' : 'None';
+            document.getElementById('distance-value').textContent = data.sensor_data.distance + ' cm';
+            
+            // Update risk scores
+            const risks = data.risk_result.risk_factors;
+            for (const [key, value] of Object.entries(risks)) {
+                const scoreEl = document.getElementById(key + '-risk');
+                if (scoreEl) {
+                    scoreEl.textContent = value.score + '/100';
+                    
+                    // Update progress bar
+                    const progressBar = scoreEl.closest('.p-3')?.querySelector('.progress-bar');
+                    if (progressBar) {
+                        progressBar.style.width = value.score + '%';
+                        progressBar.className = `progress-bar ${value.level.toLowerCase()}`;
+                    }
+                    
+                    // Update badge
+                    const badge = scoreEl.closest('.p-3')?.querySelector('.risk-badge');
+                    if (badge) {
+                        badge.textContent = value.level;
+                        badge.className = `risk-badge ${value.level.toLowerCase()}`;
+                    }
+                }
+            }
+            
+            // Check for new notifications
+            if (data.new_notifications > 0) {
+                fetch('/notifications/api/recent?new_only=true')
+                    .then(res => res.json())
+                    .then(notifData => {
+                        if (notifData.new_notifications) {
+                            notifData.new_notifications.forEach(showNotification);
+                        }
+                    });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Set up auto-refresh (5 seconds)
+    updateDashboard();
+    setInterval(updateDashboard, 5000);
+    
+    // Hide notification badge initially
+    const badge = document.getElementById('notification-count');
+    if (badge) badge.style.display = 'none';
+});
+</script>
+{% endblock %}

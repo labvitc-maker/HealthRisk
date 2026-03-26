@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Register - HealthRisk Monitor{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center min-vh-75 align-items-center py-5">
+        <div class="col-md-8 col-lg-6" data-aos="fade-up">
+            <div class="text-center mb-4">
+                <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center float" style="width: 80px; height: 80px; background: var(--pastel-green);">
+                    <i class="fas fa-leaf fa-2x" style="color: var(--pastel-green-dark);"></i>
+                </div>
+                <h2 class="fw-bold">Create Account</h2>
+                <p class="text-muted">Join HealthRisk Monitor today</p>
+            </div>
+            
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('auth.register') }}">
+                        <!-- Email Field -->
+                        <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope me-2" style="color: var(--pastel-green-dark);"></i>
+                                Email Address
+                            </label>
+                            <input type="email" 
+                                   class="form-control form-control-lg" 
+                                   id="email" 
+                                   name="email" 
+                                   required 
+                                   placeholder="Enter your email"
+                                   style="border: 2px solid var(--pastel-green); border-radius: var(--radius-lg);">
+                        </div>
+                        
+                        <!-- Password Field -->
+                        <div class="mb-4" data-aos="fade-up" data-aos-delay="200">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2" style="color: var(--pastel-green-dark);"></i>
+                                Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control form-control-lg" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   placeholder="Choose a password (min. 6 characters)"
+                                   minlength="6"
+                                   style="border: 2px solid var(--pastel-green); border-radius: var(--radius-lg);">
+                            <div class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Minimum 6 characters
+                            </div>
+                        </div>
+                        
+                        <!-- Confirm Password -->
+                        <div class="mb-4" data-aos="fade-up" data-aos-delay="300">
+                            <label for="confirm_password" class="form-label">
+                                <i class="fas fa-lock me-2" style="color: var(--pastel-green-dark);"></i>
+                                Confirm Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control form-control-lg" 
+                                   id="confirm_password" 
+                                   name="confirm_password" 
+                                   required 
+                                   placeholder="Re-enter your password"
+                                   style="border: 2px solid var(--pastel-green); border-radius: var(--radius-lg);">
+                        </div>
+                        
+                        <!-- Terms -->
+                        <div class="mb-4" data-aos="fade-up" data-aos-delay="400">
+                            <div class="form-check">
+                                <input type="checkbox" 
+                                       class="form-check-input" 
+                                       id="terms" 
+                                       required
+                                       style="border-color: var(--pastel-green-dark);">
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" style="color: var(--pastel-green-dark);">Terms of Service</a> and 
+                                    <a href="#" style="color: var(--pastel-green-dark);">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid" data-aos="fade-up" data-aos-delay="500">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Create Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card-footer bg-transparent border-0 text-center pb-4">
+                    <p class="mb-0">
+                        Already have an account? 
+                        <a href="{{ url_for('auth.login') }}" style="color: var(--pastel-green-dark); font-weight: 600;">
+                            Login here
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
